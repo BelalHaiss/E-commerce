@@ -9,11 +9,11 @@ import {
   ModalBody
 } from '@chakra-ui/react';
 import Carousel from '../layout/Carousel';
-import StarReview from '../utils/StarRate';
+import StarReview from '../layout/StarRate';
 import { BsCartPlus } from 'react-icons/bs';
 import { useEffect } from 'react';
 
-export default function InfoModal({ isOpen, setOpen }) {
+export default function InfoModal({ isOpen, setOpen, handleCart }) {
   const product = isOpen;
 
   useEffect(() => {
@@ -59,6 +59,7 @@ export default function InfoModal({ isOpen, setOpen }) {
               w='100%'
               mt='auto'
               colorScheme={'blue'}
+              onClick={() => handleCart(product)}
               leftIcon={<BsCartPlus />}
             >
               Add To Cart

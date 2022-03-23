@@ -4,7 +4,6 @@ import Products from './components/Products';
 function App() {
   return (
     <Flex flexDir={'column'} gap='2'>
-      <Nav />
       <Products />
     </Flex>
   );

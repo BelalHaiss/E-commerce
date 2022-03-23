@@ -3,11 +3,32 @@ import ReactDOM from 'react-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 import './app.css';
 import App from './App';
-
+import Cart from './components/layout/Cart';
+import Nav from './components/layout/Nav';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <Nav>
+                <App />
+              </Nav>
+            }
+          />
+          <Route
+            path='cart'
+            element={
+              <Nav>
+                <Cart />
+              </Nav>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root')

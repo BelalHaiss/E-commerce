@@ -1,11 +1,24 @@
 import { Flex, Text, Badge, Button, Image, Heading } from '@chakra-ui/react';
-import StarReview from './utils/StarRate';
+import StarReview from './layout/StarRate';
 import usePaginate from '../Hooks/usePaginate';
 import { BsCartPlus } from 'react-icons/bs';
 import Pagination from './layout/Pagination';
-import InfoModal from './modals/InfoModal';
+import InfoModal from './overlays/InfoModal';
+import { useStore } from '../store';
 import { useState } from 'react';
+import Toast from './utils/Toast';
 export default function Products() {
+  const overwriteCart = useStore((state) => state.overwriteCart);
+  const cart = useStore((state) => state.cart);
+  const handleCart = (product) => {
+    const isInCart = cart.find((item) => item.price === product.price);
+    if (isInCart) {
+      Toast(null, 'Product already in cart', 'warning');
+      return null;
+    }
+    overwriteCart('add', product);
+    Toast(null, 'Product added to cart', 'success');
+  };
   const [pageNumber, setPageNumber] = useState(1);
   const [isOpen, setOpen] = useState(false);
   const { currentData: products, totalPages } = usePaginate(pageNumber);
@@ -34,7 +47,6 @@ export default function Products() {
               borderRadius={'xl'}
               style={{ border: '1px solid white' }}
               bg={'#fffefe'}
-              onClick={() => (hoverd === i ? setOpen(product) : null)}
               _hover={{
                 bg: 'blue.400',
                 color: 'white',
@@ -55,30 +67,37 @@ export default function Products() {
               p='2'
             >
               <Image w='100px' h='100px' src={product.featuredPhoto} />
-              <Text textAlign={'center'}>{product.name}</Text>
-              {product.featuredProduct && (
-                <Badge variant='solid' colorScheme='red'>
-                  featured Product
-                </Badge>
-              )}
-              <Text fontWeight={'black'}>{product.price}</Text>
-
-              <StarReview rate={product.rate} />
-
               {hoverd === i ? (
-                <Flex>
-                  <Button colorScheme={'yellow'}>Click for more info</Button>
+                <Flex my='auto'>
+                  <Button
+                    size='sm'
+                    onClick={() => (hoverd === i ? setOpen(product) : null)}
+                    colorScheme={'yellow'}
+                  >
+                    Click here for more info
+                  </Button>
                 </Flex>
               ) : (
-                <Button
-                  w='100%'
-                  mt='auto'
-                  colorScheme={'blue'}
-                  leftIcon={<BsCartPlus />}
-                >
-                  Add To Cart
-                </Button>
+                <>
+                  <Text textAlign={'center'}>{product.name}</Text>
+                  {product.featuredProduct && (
+                    <Badge variant='solid' colorScheme='red'>
+                      featured Product
+                    </Badge>
+                  )}
+                  <Text fontWeight={'black'}>{product.price}</Text>
+                  <StarReview rate={product.rate} />
+                </>
               )}
+              <Button
+                w='100%'
+                mt='auto'
+                colorScheme={'blue'}
+                leftIcon={<BsCartPlus />}
+                onClick={() => handleCart(product)}
+              >
+                Add To Cart
+              </Button>
             </Flex>
           );
         })}
@@ -88,7 +107,7 @@ export default function Products() {
         pageNumber={pageNumber}
         setPageNumber={setPageNumber}
       />
-      <InfoModal isOpen={isOpen} setOpen={setOpen} />
+      <InfoModal isOpen={isOpen} handleCart={handleCart} setOpen={setOpen} />
     </Flex>
   );
 }
