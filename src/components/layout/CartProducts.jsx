@@ -6,7 +6,8 @@ import {
   Badge,
   Text,
   Button,
-  IconButton
+  IconButton,
+  Tooltip
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { MdRemoveShoppingCart } from 'react-icons/md';
@@ -36,7 +37,8 @@ export default function CartProducts({ cart, popover, overwriteCart }) {
               <Image
                 src={item.featuredPhoto}
                 alt='itemphoto'
-                w={popover ? '50px' : '150px'}
+                h={popover ? '50px' : '120px'}
+                w={popover ? '50px' : '120px'}
               />
 
               {/* description part */}
@@ -50,11 +52,13 @@ export default function CartProducts({ cart, popover, overwriteCart }) {
                 )}
               </Flex>
               {!popover && (
-                <IconButton
-                  colorScheme={'red'}
-                  onClick={() => overwriteCart('delete', item)}
-                  icon={<MdRemoveShoppingCart />}
-                />
+                <Tooltip label='Remove From Cart'>
+                  <IconButton
+                    colorScheme={'red'}
+                    onClick={() => overwriteCart('delete', item)}
+                    icon={<MdRemoveShoppingCart />}
+                  />
+                </Tooltip>
               )}
             </Flex>
           ))}
